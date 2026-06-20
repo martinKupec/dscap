@@ -1,0 +1,3 @@
+[submodule "third_party/DSView"]
+	path = third_party/DSView
+	url = https://github.com/DreamSourceLab/DSView.git

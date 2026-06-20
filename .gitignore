@@ -1,0 +1,21 @@
+# build output
+/build/
+/obj/
+/build-*/
+/cmake-build*/
+*.o
+*.a
+# the built binary
+/dscap
+# captures
+/caps/
+*.dsl
+# ephemeral working notes — not part of the repo
+/agentic/
+# python bytecode (scripts/)
+__pycache__/
+*.pyc
+# editor / OS cruft
+*.swp
+*~
+.DS_Store

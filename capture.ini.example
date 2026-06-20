@@ -1,0 +1,51 @@
+# Example measurement config for `dscap`.
+#   dscap capture.ini.example
+# Settings are validated against the live device; an out-of-range samplerate
+# (etc.) is rejected rather than clamped.
+#
+# mode:
+#   single       = DSO INSTANT deep one-shot (default; gapless within the buffer)
+#   roll         = DSO continuous, best-effort for duration_s (NOT guaranteed gapless)
+#   logic        = DSLogic LOGIC Buffer (deep one-shot)
+#   logic-stream = DSLogic LOGIC Stream (continuous; may overflow if USB can't keep up)
+#   stream       = DSCope ANALOG <=10 MHz continuous DAQ
+#
+# depth / duration_s: bound the per-channel capture size (single/logic).
+#   depth      = <samples>   per-channel sample count (DSO single: capped at the
+#                            device instant max, rejected if larger; logic: depth knob).
+#   duration_s = <seconds>   alternative to depth: samples = duration_s * samplerate.
+# duration_s (roll / logic-stream): wall-clock capture window (default 1 s).
+#
+# LOGIC threshold (device-global; DSLogic only):
+#   threshold = 3.3   coarse family: a numeric value >= 4 V -> 5 V level, else 1.8/2.5/3.3 V
+#   vth       = 1.4   fine input threshold VOLTAGE to the DAC (the per-signal knob)
+
+[capture]
+device     = DSCope U3P100   ; optional substring; first matching device if omitted
+mode       = single
+samplerate = 500M            ; rejected if not in the device's valid list
+; depth      = 1000000
+; duration_s = 0.002
+; threshold  = 3.3           ; DSLogic logic level family (>= 4 V -> 5 V, else 1.8/2.5/3.3 V)
+; vth        = 1.4           ; DSLogic fine input threshold voltage
+output     = caps/run-{ts}.dsl   ; {ts} -> YYMMDD-HHMMSS
+
+# Firmware/bitstream dir; overrides $DSVIEW_RES_DIR and the per-OS default.
+# Windows default: C:\Program Files\DSView\res
+; res_dir  = /opt/dsview/share/DSView/res
+
+# vertical position 0-255 (clamped 10..245) sets where 0 V lands in the ADC;
+# omit -> mid-scale 128 (can rail a DC-offset input). Match the GUI's vOffset.
+[channel0]
+enabled      = true
+vdiv         = 10mV
+probe_factor = 10
+coupling     = DC
+offset       = 245
+
+[channel1]
+enabled      = true
+vdiv         = 100mV
+probe_factor = 10
+coupling     = DC
+offset       = 138
